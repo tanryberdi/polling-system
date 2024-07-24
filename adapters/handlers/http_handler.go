@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"polling-system/domain"
@@ -75,24 +76,57 @@ func (h *HTTPHandler) ResultsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pollID := r.PathValue("id")
-	if pollID == "" {
-		http.Error(w, "Missing poll_id parameter", http.StatusBadRequest)
+	// Extract poll ID from URL
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) < 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
 		return
 	}
+	pollID := parts[2]
 
-	result, err := h.pollService.GetResults(pollID)
+	results, err := h.pollService.GetResults(pollID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(results)
+
+	/*
+		if r.Method != http.MethodGet {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		pollID := r.PathValue("id")
+		if pollID == "" {
+			http.Error(w, "Missing poll_id parameter", http.StatusBadRequest)
+			return
+		}
+
+		result, err := h.pollService.GetResults(pollID)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(result)
+
+	*/
 }
 
 func (h *HTTPHandler) PollUpdatesHandler(w http.ResponseWriter, r *http.Request) {
-	pollID := r.PathValue("id")
+	// Extract poll ID from URL
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) < 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return
+	}
+	pollID := parts[2]
+
+	//pollID := r.PathValue("id")
 	if pollID == "" {
 		http.Error(w, "Missing id parameter", http.StatusBadRequest)
 		return
@@ -109,7 +143,7 @@ func (h *HTTPHandler) PollUpdatesHandler(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		fmt.Fprintf(w, "result for pollID=%v: %v\n\n", pollID, result.Results)
+		fmt.Fprintf(w, "data: %v\n\n", result.Results)
 		w.(http.Flusher).Flush()
 
 		time.Sleep(3 * time.Second)
