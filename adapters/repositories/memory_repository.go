@@ -42,8 +42,17 @@ func (r *MemoryRepository) GetPoll(id string) (domain.Poll, error) {
 func (r *MemoryRepository) Vote(vote domain.Vote) error {
 	r.voteMutex.Lock()
 	defer r.voteMutex.Unlock()
-	if _, ok := r.votes[vote.PollID]; !ok {
+
+	r.pollMutex.RLock()
+	_, ok := r.polls[vote.PollID]
+	r.pollMutex.RUnlock()
+
+	if !ok {
 		return fmt.Errorf("poll not found")
+	}
+
+	if _, ok := r.votes[vote.PollID]; !ok {
+		r.votes[vote.PollID] = make(map[string]int)
 	}
 	r.votes[vote.PollID][vote.Option]++
 	return nil

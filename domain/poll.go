@@ -7,8 +7,8 @@ type Poll struct {
 }
 
 type Vote struct {
-	PollID string
-	Option string
+	PollID string `json:"poll_id"`
+	Option string `json:"option"`
 }
 
 type PollResult struct {

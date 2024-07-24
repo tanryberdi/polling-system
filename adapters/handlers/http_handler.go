@@ -54,6 +54,12 @@ func (h *HTTPHandler) VoteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check if PollID is provided
+	if vote.PollID == "" {
+		http.Error(w, "Missing poll_id", http.StatusBadRequest)
+		return
+	}
+
 	err = h.pollService.Vote(vote)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -103,7 +109,7 @@ func (h *HTTPHandler) PollUpdatesHandler(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		fmt.Fprintf(w, "data: %v\n\n", result.Results)
+		fmt.Fprintf(w, "result for pollID=%v: %v\n\n", pollID, result.Results)
 		w.(http.Flusher).Flush()
 
 		time.Sleep(3 * time.Second)
