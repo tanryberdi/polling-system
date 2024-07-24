@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"time"
 )
 
 type Poll struct {
@@ -148,6 +149,6 @@ func pollUpdatesHandler(w http.ResponseWriter, r *http.Request) {
 		// Simulate delay between updates
 		// In a real application, you'd use channels to notify of changes
 		// and avoid busy-waiting
-		// time.Sleep(5 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
