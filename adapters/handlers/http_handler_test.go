@@ -50,7 +50,7 @@ func TestVoteHandler(t *testing.T) {
 	handler := NewHTTPHandler(mockService)
 
 	// Create a poll first
-	mockService.CreatePoll(domain.Poll{ID: "1", Question: "Test?", Options: []string{"Option 1", "Option 2"}})
+	_ = mockService.CreatePoll(domain.Poll{ID: "1", Question: "Test?", Options: []string{"Option 1", "Option 2"}})
 
 	vote := domain.Vote{
 		PollID: "1",
@@ -80,9 +80,9 @@ func TestResultsHandler(t *testing.T) {
 		Question: "Test question?",
 		Options:  []string{"Option 1", "Option 2"},
 	}
-	mockService.CreatePoll(poll)
-	mockService.Vote(domain.Vote{PollID: "1", Option: "Option 1"})
-	mockService.Vote(domain.Vote{PollID: "1", Option: "Option 2"})
+	_ = mockService.CreatePoll(poll)
+	_ = mockService.Vote(domain.Vote{PollID: "1", Option: "Option 1"})
+	_ = mockService.Vote(domain.Vote{PollID: "1", Option: "Option 2"})
 
 	req := httptest.NewRequest("GET", "/results/1", nil)
 

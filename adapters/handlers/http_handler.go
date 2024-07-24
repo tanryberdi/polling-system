@@ -39,7 +39,7 @@ func (h *HTTPHandler) CreatePollHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(poll)
+	_ = json.NewEncoder(w).Encode(poll)
 }
 
 func (h *HTTPHandler) VoteHandler(w http.ResponseWriter, r *http.Request) {
@@ -91,30 +91,7 @@ func (h *HTTPHandler) ResultsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(results)
-
-	/*
-		if r.Method != http.MethodGet {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
-
-		pollID := r.PathValue("id")
-		if pollID == "" {
-			http.Error(w, "Missing poll_id parameter", http.StatusBadRequest)
-			return
-		}
-
-		result, err := h.pollService.GetResults(pollID)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(result)
-
-	*/
+	_ = json.NewEncoder(w).Encode(results)
 }
 
 func (h *HTTPHandler) PollUpdatesHandler(w http.ResponseWriter, r *http.Request) {

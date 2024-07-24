@@ -40,7 +40,7 @@ func TestVote(t *testing.T) {
 		Question: "Test question?",
 		Options:  []string{"Option 1", "Option 2"},
 	}
-	repo.CreatePoll(poll)
+	_ = repo.CreatePoll(poll)
 
 	vote := domain.Vote{
 		PollID: "1",
@@ -71,10 +71,10 @@ func TestGetResults(t *testing.T) {
 		Question: "Test question?",
 		Options:  []string{"Option 1", "Option 2"},
 	}
-	repo.CreatePoll(poll)
-	repo.Vote(domain.Vote{PollID: "1", Option: "Option 1"})
-	repo.Vote(domain.Vote{PollID: "1", Option: "Option 2"})
-	repo.Vote(domain.Vote{PollID: "1", Option: "Option 1"})
+	_ = repo.CreatePoll(poll)
+	_ = repo.Vote(domain.Vote{PollID: "1", Option: "Option 1"})
+	_ = repo.Vote(domain.Vote{PollID: "1", Option: "Option 2"})
+	_ = repo.Vote(domain.Vote{PollID: "1", Option: "Option 1"})
 
 	results, err := repo.GetResults("1")
 	if err != nil {
