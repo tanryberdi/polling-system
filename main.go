@@ -16,6 +16,7 @@ func main() {
 
 	http.HandleFunc("/create_poll", handler.CreatePollHandler)
 	http.HandleFunc("/vote", handler.VoteHandler)
+	http.HandleFunc("/vote_multiple", handler.VoteMultipleHandler)
 	http.HandleFunc("/results/{id}", handler.ResultsHandler)
 	http.HandleFunc("/poll_updates/{id}", handler.PollUpdatesHandler)
 

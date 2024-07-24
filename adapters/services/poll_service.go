@@ -28,6 +28,16 @@ func (s *PollService) Vote(vote domain.Vote) error {
 	return s.repo.Vote(vote)
 }
 
+func (s *PollService) VoteMultiple(multiVote domain.MultiVote) error {
+	for _, vote := range multiVote.Votes {
+		err := s.Vote(vote)
+		if err != nil {
+			return fmt.Errorf("error voting on poll %s: %w", vote.PollID, err)
+		}
+	}
+	return nil
+}
+
 func (s *PollService) GetResults(pollID string) (domain.PollResult, error) {
 	return s.repo.GetResults(pollID)
 }

@@ -70,6 +70,43 @@ func TestVoteHandler(t *testing.T) {
 	}
 }
 
+func TestVoteMultipleHandler(t *testing.T) {
+	mockService := mocks.NewMockPollService()
+	handler := NewHTTPHandler(mockService)
+
+	// Create test polls
+	_ = mockService.CreatePoll(domain.Poll{ID: "1", Question: "Test 1?", Options: []string{"Option 1", "Option 2"}})
+	_ = mockService.CreatePoll(domain.Poll{ID: "2", Question: "Test 2?", Options: []string{"Option A", "Option B"}})
+
+	votes := []domain.Vote{
+		{PollID: "1", Option: "Option 1"},
+		{PollID: "2", Option: "Option B"},
+	}
+
+	body, _ := json.Marshal(votes)
+	req := httptest.NewRequest("POST", "/vote_multiple", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	handler.VoteMultipleHandler(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	// Verify votes were recorded
+	result1, _ := mockService.GetResults("1")
+	result2, _ := mockService.GetResults("2")
+
+	if result1.Results["Option 1"] != 1 {
+		t.Errorf("Expected 1 vote for Option 1 in poll 1, got %d", result1.Results["Option 1"])
+	}
+
+	if result2.Results["Option B"] != 1 {
+		t.Errorf("Expected 1 vote for Option B in poll 2, got %d", result2.Results["Option B"])
+	}
+}
+
 func TestResultsHandler(t *testing.T) {
 	mockService := mocks.NewMockPollService()
 	handler := NewHTTPHandler(mockService)

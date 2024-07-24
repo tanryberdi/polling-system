@@ -32,6 +32,16 @@ func (m *MockPollService) Vote(vote domain.Vote) error {
 	return nil
 }
 
+func (m *MockPollService) VoteMultiple(multiVote domain.MultiVote) error {
+	for _, vote := range multiVote.Votes {
+		err := m.Vote(vote)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (m *MockPollService) GetResults(pollID string) (domain.PollResult, error) {
 	poll, ok := m.polls[pollID]
 	if !ok {

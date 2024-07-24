@@ -55,6 +55,14 @@ curl -X POST http://localhost:8080/create_poll -d '{"id":"1", "question":"Pineap
 curl -X POST http://localhost:8080/vote -d '{"poll_id":"1", "option":"No"}'
 ```
 
+### API Endpoint - For a multiple vote
+```curl
+curl -X POST http://localhost:8080/vote_multiple -H "Content-Type: application/json" -d '[
+  {"poll_id":"1", "option":"Yes"},
+  {"poll_id":"2", "option":"No"}
+]'
+```
+
 ### API Endpoint - For getting results
 ```curl
 curl http://localhost:8080/results/1

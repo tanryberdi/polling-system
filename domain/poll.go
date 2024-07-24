@@ -11,6 +11,10 @@ type Vote struct {
 	Option string `json:"option"`
 }
 
+type MultiVote struct {
+	Votes []Vote `json:"votes"`
+}
+
 type PollResult struct {
 	Poll    Poll
 	Results map[string]int

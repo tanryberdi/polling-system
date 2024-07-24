@@ -70,6 +70,30 @@ func (h *HTTPHandler) VoteHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (h *HTTPHandler) VoteMultipleHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var votes []domain.Vote
+	fmt.Println("Body=", r.Body)
+	err := json.NewDecoder(r.Body).Decode(&votes)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	multiVote := domain.MultiVote{Votes: votes}
+	err = h.pollService.VoteMultiple(multiVote)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func (h *HTTPHandler) ResultsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
