@@ -72,3 +72,22 @@ curl http://localhost:8080/results/1
 ```curl
 curl http://localhost:8080/poll_updates/1
 ```
+
+## Assumptions and Trade-offs
+* We assumed a single-server setup, which simplifies the implementation but limits scalability.
+* We used in-memory storage, which is fast but not persistent and limited by available memory. 
+* The real-time updates are implemented using a simple polling mechanism, which is not the most efficient for large-scale applications. 
+* We didn't implement user authentication or authorization, assuming all requests are valid.
+
+## Enhancements for a full-scale real-world application
+* Implement proper authentication and authorization. 
+* Use a persistent database (e.g., PostgreSQL) for storing polls and votes. 
+* Implement a more efficient real-time update mechanism using WebSockets or a pub/sub system. 
+* Add input validation and error handling. 
+* Implement rate limiting to prevent abuse. 
+* Add logging and monitoring for better observability. 
+* Implement caching to improve performance for frequently accessed polls. 
+* Create a frontend application to interact with the API. 
+* Add unit and integration tests to ensure reliability. 
+* Consider using a message queue for processing votes to handle high load scenarios.
+
